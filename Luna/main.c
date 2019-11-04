@@ -28,16 +28,11 @@ int main(int argc, const char * argv[]) {
 //    while (1) {
 //
 //    }
-    char* path ="/Users/vaskka/Desktop";
-    FileParam param;
-    param.rootPath = path;
-    param.relativePath = "b.c";
-    
-    readFileWithPath((void*) &param);
-    
-    printf("length is:%d\n", strlen(param.buffer));
-    
-    sendData("192.168.43.203", param.buffer);
 
+    while (1) {
+        receiveData("/Users/vaskka/Desktop", "a.txt");
+    }
+
+    
     return 0;
 }

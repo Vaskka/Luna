@@ -110,3 +110,73 @@ int sendData(char* destIp, char* data) {
     close(sockfd);
     return 0;
 }
+
+
+// listen and receive
+int receiveData(char* rootPath, char* relPath) {
+    int sockfd, connfd, len;
+    struct sockaddr_in servaddr;
+
+    // socket create and verification
+                //todo
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+
+    if (sockfd < 0) {
+        perror ("socket create error");
+        return 1;
+    }
+
+    bzero(&servaddr, sizeof(servaddr));
+
+    // assign IP, PORT
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_port = htons(TRANSFER_PORT);
+
+    // Binding newly created socket to given IP and verification
+                //todo
+    if (bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) == -1) {
+        perror ("socket bind error");
+        return 2;
+    }
+
+    // Now server is ready to listen and verification
+                //todo
+    if (listen(sockfd, 10) == -1) {
+        perror ("socket listen error");
+        return 3;
+    }
+
+    // Accept the data packet from client and verification
+                //todo
+    len = sizeof(servaddr);
+    
+    ssize_t n = 0;
+    char buff[20];
+    FileParam param;
+    param.rootPath = rootPath;
+    param.relativePath = relPath;
+    param.buffer = buff;
+    
+    // for test
+    int byteCount = 0;
+    
+    do {
+        bzero(param.buffer, strlen(param.buffer));
+        connfd = accept(sockfd, (struct sockaddr*) &servaddr, (socklen_t*) &len);
+        n = recv(connfd, param.buffer, strlen(param.buffer), 0);
+        
+        byteCount += n;
+        
+        appendFileWithPath((void*) &param);
+    }
+    while (n != 0);
+
+    printf("number of byte is %d\n", byteCount);
+    
+    // After chatting close the socket
+    close(sockfd);
+    
+    return byteCount;
+}

@@ -48,6 +48,18 @@ void* readFileWithPath(void* _FILEPARAM param) {
     return (void*) 0;
 }
 
+// write into file
+void modifyFile(FILE* fileRef, char* buffer) {
+    // write content
+    FILE_LEN i;
+    FILE_LEN len = strlen(buffer);
+    for (i = 0; i < len; i++) {
+        fputc(*(buffer + i), fileRef);
+    }
+    
+    fclose(fileRef);
+}
+
 
 // 向路径写入文件(新建文件并写入) can running in thread
 void* writeFileWithPath(void* _FILEPARAM param) {
@@ -61,16 +73,29 @@ void* writeFileWithPath(void* _FILEPARAM param) {
     }
     
     // write content
-    FILE_LEN i;
-    FILE_LEN len = strlen(fileParam->buffer);
-    for (i = 0; i < len; i++) {
-        fputc(*(fileParam->buffer + i), file);
-    }
-    
-    fclose(file);
+    modifyFile(file, fileParam->buffer);
     
     return (void*) 0;
 }
+
+
+// 附加文件内容
+void* appendFileWithPath(void* _FILEPARAM param) {
+    FileParam* fileParam = (FileParam*) param;
+    
+    char* abspath = joinPath(fileParam->rootPath, fileParam->relativePath);
+    FILE* file = fopen(abspath, "ab");
+    if (file == NULL) {
+        raise_error("文件打开失败");
+    }
+    
+    // write content
+    modifyFile(file, fileParam->buffer);
+    
+    return (void*) 0;
+}
+
+
 
 // 判断路径是否存在 1-存在 0-不存在
 int pathExist(const char* path) {

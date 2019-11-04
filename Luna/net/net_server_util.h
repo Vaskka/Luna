@@ -9,7 +9,6 @@
 #ifndef net_server_util_h
 #define net_server_util_h
 
-// std lib
 #include <string.h>
 
 // net dependence
@@ -24,6 +23,7 @@
 #include <ifaddrs.h>
 
 #include "../common.h"
+#include "../file/file_util.h"
 #include "net_constant.h"
 
 
@@ -38,5 +38,8 @@ int getSelfIp(char* ipRef);
 
 // send data through tcp
 int sendData(char* destIp, char* data);
+
+// listen and receive
+int receiveData(char* rootPath, char* relPath);
 
 #endif /* net_server_util_h */

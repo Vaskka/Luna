@@ -37,6 +37,9 @@ void* readFileWithPath(void* _FILEPARAM param);
 // 向路径写入文件(新建文件并写入)
 void* writeFileWithPath(void* _FILEPARAM param);
 
+// 附加文件内容
+void* appendFileWithPath(void* _FILEPARAM param);
+
 // 获取文件大小
 FILE_LEN file_size(char* filename);
 
