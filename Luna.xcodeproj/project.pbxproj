@@ -36,6 +36,7 @@
 		F8395A02236953740033C88D /* linkedlist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = linkedlist.c; sourceTree = "<group>"; };
 		F8395A05236954550033C88D /* stringbuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stringbuilder.h; sourceTree = "<group>"; };
 		F8395A06236954550033C88D /* stringbuilder.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = stringbuilder.c; sourceTree = "<group>"; };
+		F85B3B8223703BD6008ED1E8 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		F8A04E41236ECD2B00F465C2 /* cJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cJSON.c; sourceTree = "<group>"; };
 		F8A04E42236ECD2B00F465C2 /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
 		F8A9AAC12351C37700AC6B45 /* Luna */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Luna; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,6 +123,7 @@
 				F8A9AAE32351C39A00AC6B45 /* file */,
 				F8A9AACB2351C39A00AC6B45 /* net */,
 				F8A9AADA2351C39A00AC6B45 /* utils */,
+				F85B3B8223703BD6008ED1E8 /* CMakeLists.txt */,
 			);
 			path = Luna;
 			sourceTree = "<group>";
