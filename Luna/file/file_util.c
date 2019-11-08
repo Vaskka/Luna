@@ -70,6 +70,7 @@ void* writeFileWithPath(void* _FILEPARAM param) {
     FILE* file = fopen(abspath, "wb");
     if (file == NULL) {
         raise_error("文件打开失败");
+        return (void*) 1;
     }
     
     // write content
@@ -87,6 +88,7 @@ void* appendFileWithPath(void* _FILEPARAM param) {
     FILE* file = fopen(abspath, "ab");
     if (file == NULL) {
         raise_error("文件打开失败");
+        return (void*) 1;
     }
     
     // write content

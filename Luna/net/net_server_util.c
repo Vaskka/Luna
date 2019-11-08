@@ -68,25 +68,53 @@ int getSelfIp(char* ipRef) {
         if (ifAddrStruct->ifa_addr->sa_family==AF_INET)  // check it is IP4
         {
             tmpAddrPtr = &((struct sockaddr_in *)ifAddrStruct->ifa_addr)->sin_addr;
-            if(inet_ntop(AF_INET, tmpAddrPtr, ipRef, INET_ADDRSTRLEN))
+            if (inet_ntop(AF_INET, tmpAddrPtr, ipRef, INET_ADDRSTRLEN))
             {
                 status = 0;
-                if(strcmp("127.0.0.1",ipRef))
+                if (strcmp("127.0.0.1",ipRef))
                 {
                      break;
                 }
             }
-        }else if(ifAddrStruct->ifa_addr->sa_family==AF_INET6){
+        } else if(ifAddrStruct->ifa_addr->sa_family==AF_INET6){
             //可以添加IP6相应代码
         }
         ifAddrStruct=ifAddrStruct->ifa_next;
     }
+    
     return status;
 }
 
 
+// get luna-protocal string
+char* getLunaProtocal(char* uid, char* pathToFile, char* data) {
+    
+    cJSON* root = cJSON_CreateObject();
+    cJSON* rootType = cJSON_CreateNumber(0);
+    cJSON* rootContent = cJSON_CreateObject();
+    
+    cJSON* contentData = cJSON_CreateString(data);
+    cJSON* contentPath = cJSON_CreateString(pathToFile);
+    cJSON* contentLength = cJSON_CreateNumber(strlen(data));
+    cJSON* contentId = cJSON_CreateString(uid);
+    
+    cJSON_AddItemToObject(rootContent, "id", contentId);
+    cJSON_AddItemToObject(rootContent, "path", contentPath);
+    cJSON_AddItemToObject(rootContent, "length", contentLength);
+    cJSON_AddItemToObject(rootContent, "data", contentData);
+    
+    cJSON_AddItemToObject(root, "type", rootType);
+    cJSON_AddItemToObject(root, "content", rootContent);
+    
+    char* res = cJSON_Print(root);
+    cJSON_Delete(root);
+
+    return res;
+}
+
+
 // send data through tcp
-int sendData(char* destIp, char* data) {
+int sendData(char* destIp, char* uid, char* pathToFile, char* data) {
     int sockfd;
     struct sockaddr_in servaddr;
 
@@ -104,16 +132,65 @@ int sendData(char* destIp, char* data) {
     connect(sockfd, (struct sockaddr *) &servaddr, sizeof(servaddr));
 
     //send data
-    send(sockfd, data, strlen(data), 0);
-
+    // 构造协议结构
+    char* buff = getLunaProtocal(uid, pathToFile, data);
+    
+    
+    size_t n = send(sockfd, buff, strlen(buff), 0);
+    free(buff);
+    printf("send: %s, count: %ld", buff, n);
+//    int factor = 2;
+//    unsigned long border = (len - (len % factor));
+//    for (int i = 0; i < border / factor; i++) {
+//        size_t n = send(sockfd, data + (i * factor), factor, 0);
+//        printf("send %s:count:%ld\n", (data + (i * factor)),n);
+//    }
+//
+//    size_t n = send(sockfd, data + border, len % factor, 0);
+//    printf("send %s:count:%ld\n", data + border,n);
+    
     // close the socket
     close(sockfd);
     return 0;
 }
 
 
+
+// 构造FileParam
+FileParam* getFileParam(char* rootPath, char* receiveData) {
+    FileParam* param = (FileParam*) malloc(sizeof(FileParam));
+    param->rootPath = rootPath;
+    
+    cJSON* root = cJSON_Parse(receiveData);
+    
+    int type = cJSON_GetObjectItem(root, "type")->valueint;
+    cJSON* content = cJSON_GetObjectItem(root, "content");
+    if (type) {
+        // 1-control
+    }
+    else {
+        // 0-data
+        
+        // 路径结构: id/rel/path/to/file.xxx
+        char* id = cJSON_GetObjectItem(content, "id")->valuestring;
+        char* path = cJSON_GetObjectItem(content, "path")->valuestring;
+        char* relPath = joinPath(id, path);
+        
+        param->relativePath = relPath;
+        
+        // copy data
+        param->buffer = (char*) malloc(sizeof(char) * cJSON_GetObjectItem(content, "length")->valueint);
+        strcpy(param->buffer, cJSON_GetObjectItem(content, "data")->valuestring);
+    }
+    
+    cJSON_Delete(root);
+    return param;
+}
+
+
+
 // listen and receive
-int receiveData(char* rootPath, char* relPath) {
+int receiveData(char* rootPath) {
     int sockfd, connfd, len;
     struct sockaddr_in servaddr;
 
@@ -131,7 +208,7 @@ int receiveData(char* rootPath, char* relPath) {
 
     // assign IP, PORT
     servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_addr.s_addr = INADDR_ANY;
     servaddr.sin_port = htons(TRANSFER_PORT);
 
     // Binding newly created socket to given IP and verification
@@ -153,30 +230,33 @@ int receiveData(char* rootPath, char* relPath) {
     len = sizeof(servaddr);
     
     ssize_t n = 0;
-    char buff[20];
-    FileParam param;
-    param.rootPath = rootPath;
-    param.relativePath = relPath;
-    param.buffer = buff;
-    
-    // for test
-    int byteCount = 0;
+    char* buff = (char*) malloc(sizeof(char) * 1024 * 1024 * 20);
     
     do {
-        bzero(param.buffer, strlen(param.buffer));
+        
         connfd = accept(sockfd, (struct sockaddr*) &servaddr, (socklen_t*) &len);
-        n = recv(connfd, param.buffer, strlen(param.buffer), 0);
+        n = recv(connfd, buff, 8192, 0);
         
-        byteCount += n;
+        if (n < 0) {
+            raise_error("tcp receive error");
+            continue;
+        }
         
-        appendFileWithPath((void*) &param);
+        if (n == 0) {
+            raise_error("tcp receive empty message");
+            continue;
+        }
+        
+        // 根据协议构造FileParam
+        FileParam* param = getFileParam(rootPath, buff);
+        
+        writeFileWithPath((void*) &param);
+        printf("read data:%s, count:%d\n", buff, n);
     }
-    while (n != 0);
-
-    printf("number of byte is %d\n", byteCount);
+    while (1);
     
     // After chatting close the socket
     close(sockfd);
     
-    return byteCount;
+    return 0;
 }

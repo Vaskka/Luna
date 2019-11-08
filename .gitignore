@@ -2,3 +2,5 @@ main
 
 *.gch
 *.out
+
+.DS_Store

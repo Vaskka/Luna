@@ -25,6 +25,7 @@
 #include "../common.h"
 #include "../file/file_util.h"
 #include "net_constant.h"
+#include "../utils/json/cJSON.h"
 
 
 // send ping running in thread
@@ -37,9 +38,9 @@ void* broadcast_text(void* _CHARABLE text);
 int getSelfIp(char* ipRef);
 
 // send data through tcp
-int sendData(char* destIp, char* data);
+int sendData(char* destIp, char* uid, char* pathToFile, char* data);
 
 // listen and receive
-int receiveData(char* rootPath, char* relPath);
+int receiveData(char* rootPath);
 
 #endif /* net_server_util_h */
