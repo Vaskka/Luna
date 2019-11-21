@@ -21,6 +21,8 @@ class UdpClient : public QObject {
 
  public:
   explicit UdpClient(QString boardcaseContent);
+
+  ~UdpClient();
 };
 
 #endif  // UDPCLIENT_H

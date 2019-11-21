@@ -23,6 +23,17 @@ enum ProtocalCommand {
 
 };
 
+/* 异常类型 */
+enum ExceptionType {
+  None,            /* 无异常 */
+  FileNotFound,    /* 文件不存在 */
+  AuthError,       /* 鉴权错误 */
+  HostCanNotArrive /* 主机不可达 */
+};
+
+/* 广播content */
+static const char* broadcastContent = "LUNA_BROADCAST";
+
 }  // namespace LunaConstant
 
 /*
@@ -31,6 +42,7 @@ enum ProtocalCommand {
 "content" : {
 "command" : $ProtocalCommand$,
 "token": "authorize token", //
+"exception": $ExceptionType$
 "data": ""
 }
 

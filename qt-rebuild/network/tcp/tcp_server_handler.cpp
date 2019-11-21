@@ -1,6 +1,15 @@
 #include "tcp_server_handler.h"
 
-TcpServerHandler::TcpServerHandler() {
+/**
+ * @brief TcpServerHandler::TcpServerHandler 创建一个指定端口号的监听
+ * @param port 端口号
+ */
+TcpServerHandler::TcpServerHandler(quint16 port) {
+  // 0 为默认端口
+  if (port == 0) {
+    port = DEFAULT_TRANS_PORT;
+  }
+
   server = new TcpServer;
 
   // 同一tcp消息处理回调
@@ -8,7 +17,7 @@ TcpServerHandler::TcpServerHandler() {
           &TcpServerHandler::serverReceivedHandler);
 
   // listening
-  if (!server->listen(QHostAddress::Any, TRANS_PORT)) {
+  if (!server->listen(QHostAddress::Any, port)) {
     qDebug() << server->errorString();
     return;
   }

@@ -6,13 +6,17 @@
 
 #include "tcp_server.h"
 
-#define TRANS_PORT 4002
+#define DEFAULT_TRANS_PORT 4002
 
 class TcpServerHandler : public QObject {
   Q_OBJECT
 
  public:
-  explicit TcpServerHandler();
+  /**
+   * @brief TcpServerHandler 创建一个指定端口号的监听
+   * @param port 端口号
+   */
+  explicit TcpServerHandler(quint16 port);
   ~TcpServerHandler();
 
  signals:

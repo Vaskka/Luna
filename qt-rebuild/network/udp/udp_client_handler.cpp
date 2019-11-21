@@ -11,6 +11,17 @@ UdpClient::UdpClient(QString boardcaseContent) {
 }
 
 /**
+ * @brief UdpClient::~UdpClient 释放连接 释放timer
+ */
+UdpClient::~UdpClient() {
+  this->timer->stop();
+  delete this->timer;
+
+  this->socket->close();
+  delete this->socket;
+}
+
+/**
  * @brief UdpClient::processBoardcast 发送udp消息
  */
 void UdpClient::processBoardcast() {

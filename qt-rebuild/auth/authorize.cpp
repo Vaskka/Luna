@@ -26,6 +26,8 @@ bool AuthDatabaseHandler::checkIfTokenValid(QString token) {
   int hostnameCol = r.indexOf("hostname");
   int pathCol = r.indexOf("path");
   int saltCol = r.indexOf("salt");
+
+  // make sure we get first
   query.next();
 
   // record in database
@@ -46,14 +48,14 @@ bool AuthDatabaseHandler::checkIfTokenValid(QString token) {
   }
 
   // check time
-  qint64 intervalSec = recordCreateTime.secsTo(QDateTime::currentDateTime());
+  qint64 intervalMSec = recordCreateTime.secsTo(QDateTime::currentDateTime());
 
-  if (intervalSec > this->timeout) {
+  if (intervalMSec > this->timeout) {
     this->ref.transaction();
 
-    // where id = originalIdx
-    QMap<QString, MergeQIntegerAndQString> idWhere;
-    idWhere["id"] = MergeQIntegerAndQString(recordId);
+    // where ip = originalIP
+    QMap<QString, MergeQIntegerAndQString> ipWhere;
+    ipWhere["ipaddr"] = MergeQIntegerAndQString(recordIpaddr);
 
     // 计算新的salt和token
     recordSalt = Authorize::getRandomSalt();
@@ -61,10 +63,10 @@ bool AuthDatabaseHandler::checkIfTokenValid(QString token) {
                                             recordPath, recordSalt);
 
     // update salt, token, createtime
-    updateFromDatabase("salt", "\"" + recordSalt + "\"", idWhere);
-    updateFromDatabase("token", "\"" + recordToken + "\"", idWhere);
+    updateFromDatabase("salt", "\"" + recordSalt + "\"", ipWhere);
+    updateFromDatabase("token", "\"" + recordToken + "\"", ipWhere);
     updateFromDatabase("createtime",
-                       "\"" + Util::getFormatCurrentDateTime() + "\"", idWhere);
+                       "\"" + Util::getFormatCurrentDateTime() + "\"", ipWhere);
 
     this->ref.commit();
 

@@ -58,3 +58,14 @@ qint32 Util::getRandom(qint32 upper) {
 QString Util::getFormatCurrentDateTime() {
   return QDateTime::currentDateTime().toUTC().toString("yyyy-MM-dd HH:mm:ss");
 }
+
+quint32 Util::increment = 0;
+
+/**
+ * @brief Util::getAutoInceaseId 获取自增id
+ * @return quint32
+ */
+quint32 Util::getAutoInceaseId() {
+  Util::increment = (Util::increment + 1) % 0xFFFFFF;
+  return Util::increment;
+}

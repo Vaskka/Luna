@@ -9,6 +9,12 @@
 #include <QUuid>
 
 class Util {
+ private:
+  /**
+   * @brief increment 自增id
+   */
+  static quint32 increment;
+
  public:
   Util();
 
@@ -42,6 +48,12 @@ class Util {
    * @return QString
    */
   static QString getFormatCurrentDateTime();
+
+  /**
+   * @brief getAutoInceaseId 得到自增id
+   * @return quint32
+   */
+  static quint32 getAutoInceaseId();
 };
 
 #endif  // UTIL_H

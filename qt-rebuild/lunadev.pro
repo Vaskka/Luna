@@ -18,8 +18,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         auth/authorize.cpp \
-        core/file_transfer.cpp \
-        core/transfer_control.cpp \
+        core/luna_core.cpp \
+        core/service/alive_nodes_service.cpp \
+        core/service/boardcast_service.cpp \
+        core/service/luna_service.cpp \
+        fordebug.cpp \
         io/database_handler.cpp \
         io/iocenter.cpp \
         main.cpp \
@@ -39,8 +42,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     auth/authorize.h \
     common.h \
-    core/file_transfer.h \
-    core/transfer_control.h \
+    core/luna_core.h \
+    core/service/alive_nodes_service.h \
+    core/service/boardcast_service.h \
+    core/service/luna_service.h \
+    fordebug.h \
     io/database_handler.h \
     io/iocenter.h \
     network/tcp/tcp_client_handler.h \

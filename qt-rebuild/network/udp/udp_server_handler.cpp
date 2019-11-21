@@ -18,19 +18,14 @@ UdpServerHandler::~UdpServerHandler() {
  */
 void UdpServerHandler::receiveBoardcase() {
   QByteArray datagram;
+  quint16 receivePort;
+  QHostAddress ipaddr;
   while (socket->hasPendingDatagrams()) {
     datagram.resize(int(socket->pendingDatagramSize()));
-    socket->readDatagram(datagram.data(), datagram.size());
+    socket->readDatagram(datagram.data(), datagram.size(), &ipaddr,
+                         &receivePort);
 
-    QString content(datagram);
-    processDatagram(content);
+    QString content = datagram;
+    emit processDatagram(ipaddr.toString(), content);
   }
-}
-
-/**
- * @brief UdpServer::processTheDatagram 子类重写处理方法
- * @param s QString
- */
-void UdpServerHandler::processDatagram(QString s) {
-  qDebug() << s;
 }

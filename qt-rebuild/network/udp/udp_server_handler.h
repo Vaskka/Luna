@@ -15,14 +15,12 @@ class UdpServerHandler : public QObject {
   QUdpSocket* socket;
 
  signals:
+  void processDatagram(QString ip, QString s);
 
  public:
   explicit UdpServerHandler();
 
   ~UdpServerHandler();
-
- protected slots:
-  void processDatagram(QString s);
 
  private slots:
   void receiveBoardcase();
