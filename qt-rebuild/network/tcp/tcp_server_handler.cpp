@@ -9,6 +9,7 @@ TcpServerHandler::TcpServerHandler(quint16 port) {
   if (port == 0) {
     port = DEFAULT_TRANS_PORT;
   }
+  this->port = port;
 
   server = new TcpServer;
 
@@ -40,8 +41,13 @@ TcpServerHandler::TcpServerHandler(quint16 port) {
 void TcpServerHandler::serverReceivedHandler(qintptr desc,
                                              QTcpSocket* socketRef,
                                              const QByteArray& data) {
-  QString* s = new QString(data);
-  qDebug() << "received:" << *s;
+  // QString* s = new QString(data);
+  // qDebug() << "tcp " << getPort() << " received:" << *s;
+
+  /* 可接入logger */
+
+  // 外部可接入回调
+  emit tcpReceived(socketRef->peerAddress().toString(), data);
 }
 
 void TcpServerHandler::clientConnected(qintptr desc, QTcpSocket* socket) {
@@ -59,4 +65,8 @@ void TcpServerHandler::clientDisconnected(qintptr desc) {
 
 TcpServerHandler::~TcpServerHandler() {
   server->close();
+}
+
+quint16 TcpServerHandler::getPort() const {
+  return port;
 }

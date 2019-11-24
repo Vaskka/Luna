@@ -8,26 +8,6 @@
 #include "../../network/udp/udp_server_handler.h"
 #include "common.h"
 
-///**
-// * @brief The BroadcastThread class 广播发送线程
-// */
-// class BroadcastSendThread : public QThread {
-// public:
-//  BroadcastSendThread();
-
-//  void run() override;
-//};
-
-///**
-// * @brief The BroadcastReceiveThread class 广播接收线程
-// */
-// class BroadcastReceiveThread : public QThread {
-// public:
-//  BroadcastReceiveThread();
-
-//  void run() override;
-//};
-
 /**
  * @brief The BoardcastService class 广播服务
  */
@@ -39,22 +19,28 @@ class BoardcastService : public QObject {
   /**
    * @brief appendNewIp 收到广播消息
    * @param ip ip
+   * @param username username
    */
-  void appendNewIp(QString ip);
+  void appendNewIp(QString ip, QString username);
 
  private:
   UdpClient* client;
 
   UdpServerHandler* server;
 
+  QString username;
+
  public:
-  BoardcastService();
+  BoardcastService(QString username);
 
   void initService();
 
   void runService();
 
   void destoryService();
+
+  QString getUsername() const;
+  void setUsername(const QString& value);
 
  private slots:
   /**

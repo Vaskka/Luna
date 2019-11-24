@@ -18,10 +18,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         auth/authorize.cpp \
+        common.cpp \
         core/luna_core.cpp \
         core/service/alive_nodes_service.cpp \
         core/service/boardcast_service.cpp \
-        core/service/luna_service.cpp \
+        core/service/file_control_service.cpp \
+        core/service/file_transfer_service.cpp \
         fordebug.cpp \
         io/database_handler.cpp \
         io/iocenter.cpp \
@@ -45,7 +47,8 @@ HEADERS += \
     core/luna_core.h \
     core/service/alive_nodes_service.h \
     core/service/boardcast_service.h \
-    core/service/luna_service.h \
+    core/service/file_control_service.h \
+    core/service/file_transfer_service.h \
     fordebug.h \
     io/database_handler.h \
     io/iocenter.h \

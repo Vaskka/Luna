@@ -4,6 +4,7 @@
 #include <QCryptographicHash>
 #include <QDate>
 #include <QDateTime>
+#include <QFileInfo>
 #include <QHostInfo>
 #include <QNetworkInterface>
 #include <QUuid>
@@ -54,6 +55,13 @@ class Util {
    * @return quint32
    */
   static quint32 getAutoInceaseId();
+
+  /**
+   * @brief fromPathGetFileName 使用路径得到文件名
+   * @param path path
+   * @return QString
+   */
+  static QString fromPathGetFileName(QString path);
 };
 
 #endif  // UTIL_H

@@ -18,7 +18,9 @@ class TcpClient : public QObject {
  public:
   TcpClient();
 
-  void send(QString ipaddr, quint16 port, QString msg);
+  ~TcpClient();
+
+  void send(QString ipaddr, quint16 port, QString& msg);
 
  public slots:
 

@@ -12,7 +12,16 @@
 int main(int argc, char* argv[]) {
   QCoreApplication a(argc, argv);
 
-  ForDebug f;
+  ForDebug debug;
+  //  QFile afile("/Users/vaskka/Desktop/a.out");
+  //  QFile bfile("/Users/vaskka/Desktop/b.out");
+  //  afile.open(QFile::ReadOnly);
+  //  bfile.open(QFile::ReadOnly);
+  //  QByteArray adata = afile.readAll();
+  //  QByteArray bdata = bfile.readAll();
+  //  debug.debugSendFileComfirm("127.0.0.1", "/Users/vaskka/Desktop/a.out",
+  //  adata); debug.debugSendFileComfirm("127.0.0.1",
+  //  "/Users/vaskka/Desktop/b.out", bdata);
 
   return a.exec();
 }

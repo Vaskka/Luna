@@ -4,25 +4,31 @@ TcpClient::TcpClient() {
   sock = new QTcpSocket();
 }
 
+TcpClient::~TcpClient() {
+  this->close();
+}
+
 /**
  * @brief send 发送数据给指定地址:端口
  * @param ipaddr ip
  * @param port 端口
  * @param msg 发送的数据
  */
-void TcpClient::send(QString ipaddr, quint16 port, QString msg) {
+void TcpClient::send(QString ipaddr, quint16 port, QString& msg) {
   this->content = msg;
 
   // 连接
   sock->connectToHost(ipaddr, port);
   // 检测连接成功
   connect(this->sock, &QTcpSocket::connected, this, &TcpClient::connectSuccess);
+  this->sock->waitForConnected();
 }
 
 /**
  * @brief Client::close 关闭连接
  */
 void TcpClient::close() {
+  sock->flush();
   sock->close();
 }
 
@@ -46,7 +52,7 @@ void TcpClient::connectSuccess() {
   // 检测发送完毕
   connect(sock, &QTcpSocket::bytesWritten, this,
           &TcpClient::clientFinishedSendingData);
-  // sock->flush();
+  this->sock->waitForBytesWritten();
 }
 
 /**

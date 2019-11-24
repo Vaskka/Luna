@@ -70,6 +70,7 @@ bool AuthDatabaseHandler::checkIfTokenValid(QString token) {
 
     this->ref.commit();
 
+    // for logger
     emit tokenTimeout(token, recordCreateTime, this->timeout);
   }
 

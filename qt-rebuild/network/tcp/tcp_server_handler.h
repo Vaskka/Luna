@@ -19,11 +19,25 @@ class TcpServerHandler : public QObject {
   explicit TcpServerHandler(quint16 port);
   ~TcpServerHandler();
 
+  quint16 getPort() const;
+
  signals:
+
+  /**
+   * @brief serverReceived 内部接口回调，可以用与log或debug
+   */
   void serverReceived(qintptr, QTcpSocket*, const QByteArray&);
+
+  /**
+   * @brief tcpReceived 向外暴露的接口回调
+   * @param data QByteArray& const
+   */
+  void tcpReceived(const QString ip, const QByteArray& data);
 
  private:
   TcpServer* server = nullptr;
+
+  quint16 port;
 
  protected slots:
   void serverReceivedHandler(qintptr desc,
