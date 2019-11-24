@@ -2,6 +2,7 @@
 
 TcpClient::TcpClient() {
   sock = new QTcpSocket();
+  connect(this->sock, &QTcpSocket::connected, this, &TcpClient::connectSuccess);
 }
 
 TcpClient::~TcpClient() {
@@ -18,9 +19,11 @@ void TcpClient::send(QString ipaddr, quint16 port, QString& msg) {
   this->content = msg;
 
   // 连接
-  sock->connectToHost(ipaddr, port);
+  if (sock->state() == QAbstractSocket::SocketState::UnconnectedState) {
+    sock->connectToHost(ipaddr, port);
+  }
+
   // 检测连接成功
-  connect(this->sock, &QTcpSocket::connected, this, &TcpClient::connectSuccess);
   this->sock->waitForConnected();
 }
 
@@ -36,16 +39,11 @@ void TcpClient::close() {
  * @brief connectSuccess 连接成功回调
  */
 void TcpClient::connectSuccess() {
-  QTcpSocket* dest = (QTcpSocket*)sender();
-
   // 读取服务端数据
   connect(sock, &QTcpSocket::readyRead, this, &TcpClient::readDataFromServer);
   // 检测掉线
   connect(sock, &QTcpSocket::disconnected, this,
           &TcpClient::clientDisconnected);
-
-  qDebug() << "Success connected to " << dest->peerName() << " with "
-           << dest->peerAddress() << "\n";
 
   sock->write(this->content.toUtf8());
 
@@ -58,20 +56,12 @@ void TcpClient::connectSuccess() {
 /**
  * @brief readDataFromServer 从服务器读取数据
  */
-void TcpClient::readDataFromServer() {
-  QTcpSocket* socket = (QTcpSocket*)sender();
-  QString s = socket->readAll();
-  qDebug() << s << " from " << socket->peerAddress();
-}
+void TcpClient::readDataFromServer() {}
 
 /**
  * @brief clientDisconnected 掉线回调
  */
-void TcpClient::clientDisconnected() {
-  QTcpSocket* dissocket = (QTcpSocket*)sender();
-
-  qDebug() << "client " << dissocket->peerAddress() << " disconnected!\n";
-}
+void TcpClient::clientDisconnected() {}
 
 /**
  * @brief clientFinishedSendingData 数据发送完毕

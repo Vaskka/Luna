@@ -88,7 +88,6 @@ class AuthDatabaseHandler : protected DatabaseHandler {
   void tokenNotFit(QString token);
 
  public:
-  explicit AuthDatabaseHandler(QString table);
   explicit AuthDatabaseHandler(QString table, int timeout);
 
   /**
@@ -115,6 +114,14 @@ class AuthDatabaseHandler : protected DatabaseHandler {
 
  private:
   void createTableWithName(QString name);
+
+  /**
+   * @brief getFieldCount 获得某个字段的个数
+   * @param field field
+   * @return qint32
+   */
+  qint32 getFieldCount(QString field, QString fieldValue);
+
   qint32 timeout;
 };
 
@@ -135,7 +142,7 @@ class Authorize : public QObject {
   qint32 timeLimit;
 
  public:
-  explicit Authorize(int);
+  explicit Authorize(qint32 timeLimit);
 
   /**
    * @brief applyUniqueToken 向鉴权中心申请唯一token

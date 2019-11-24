@@ -1,6 +1,7 @@
 #ifndef LUNACORE_H
 #define LUNACORE_H
 
+#include <QMap>
 #include <QObject>
 
 #include "../auth/authorize.h"
@@ -77,10 +78,7 @@ class LunaCore : public QObject {
    * @param path path
    * @param token token
    */
-  void sendFileExposure(QString ip,
-                        QString username,
-                        QString path,
-                        QString token);
+  void sendFileExposure(QString ip, QString username, QString path);
 
   /**
    * @brief sendFileRequest 发送文件请求
@@ -89,10 +87,7 @@ class LunaCore : public QObject {
    * @param token token
    * @param path path
    */
-  void sendFileRequest(QString ip,
-                       QString username,
-                       QString token,
-                       QString path);
+  void sendFileRequest(QString ip, QString username, QString path);
 
   /**
    * @brief sendFileComfirm 发送文件内容
@@ -128,6 +123,12 @@ class LunaCore : public QObject {
    */
   void setUsername(const QString& value);
 
+  /**
+   * @brief getAliveNodeMap 获得活跃节点映射表
+   * @return QMap&lt;QString, AliveNode*&gt;
+   */
+  QMap<QString, AliveNode*>* getAliveNodeMap();
+
  signals:
 
   /**
@@ -161,12 +162,8 @@ class LunaCore : public QObject {
    * @param ip 目标ip
    * @param username username
    * @param path 路径
-   * @param token 可用的鉴权token
    */
-  void receiveFileExposure(QString ip,
-                           QString username,
-                           QString path,
-                           QString token);
+  void receiveFileExposure(QString ip, QString username, QString path);
 
   /**
    * @brief getTransferDeny 接收到传输拒绝的消息

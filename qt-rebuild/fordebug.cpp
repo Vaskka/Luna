@@ -1,93 +1,90 @@
 #include "fordebug.h"
 
 ForDebug::ForDebug() : QObject() {
-  this->service = new BoardcastService("asdasd");
-  service->initService();
-  service->runService();
+  this->core = new LunaCore("MyNode");
 
-  connect(this->service, &BoardcastService::appendNewIp, this,
-          &ForDebug::debugAppendNewIp);
-  //  connect(&this->service, &FileTransferService::getTransferComfirm, this,
-  //          &ForDebug::debugGetTransferComfirm);
+  connect(this->core, &LunaCore::receiveError, this, &ForDebug::receiveError);
+  connect(this->core, &LunaCore::findNewNode, this, &ForDebug::findNewNode);
+  connect(this->core, &LunaCore::fileSending, this, &ForDebug::fileSending);
+  connect(this->core, &LunaCore::receiveFileContent, this,
+          &ForDebug::receiveFileContent);
+  connect(this->core, &LunaCore::receiveFileExposure, this,
+          &ForDebug::receiveFileExposure);
+  connect(this->core, &LunaCore::receiveTransferDeny, this,
+          &ForDebug::receiveTransferDeny);
 
-  //  connect(&this->service,
-  //  &FileControlService::receiveValidFileTransferExposure,
-  //          this, &ForDebug::debugReceiveValidFileTransferExposure);
-
-  //  connect(&this->service, &FileControlService::receiveTransferRequest, this,
-  //          &ForDebug::debugReceiveTransferRequest);
-
-  //  connect(&this->service, &FileControlService::receiveFileTransferDeny,
-  //  this,
-  //          &ForDebug::debugReceiveFileTransferDeny);
-
-  //  connect(&this->service, &FileControlService::receiveError, this,
-  //          &ForDebug::debugReceiveError);
+  connect(this->core, &LunaCore::requestPassAuthorize, this,
+          &ForDebug::requestPassAuthorize);
 }
 
-void ForDebug::sendBC() {}
-
-void ForDebug::debugSendFileComfirm(const QString ip,
-                                    const QString path,
-                                    const QByteArray& data) {
-  // this->service.sendFileComfirm(ip, path, data);
+void ForDebug::sendFileExposure(QString ip, QString username, QString path) {
+  this->core->sendFileExposure(ip, username, path);
 }
 
-void ForDebug::debugAppendNewIp(QString ip, QString username) {
-  qDebug() << "get ip:" << ip << " and username is:" << username;
+void ForDebug::sendFileRequest(QString ip, QString username, QString path) {
+  this->core->sendFileRequest(ip, username, path);
 }
 
-// void ForDebug::sendExp(QString ip, QString path, QString token) {
-//  this->service.sendFileExposure(ip, path, token);
-//}
-
-// void ForDebug::sendDeny(QString ip) {
-//  this->service.sendTransferDeny(ip);
-//}
-
-void ForDebug::debugReceiveValidFileTransferExposure(QString ip,
-                                                     QString path,
-                                                     QString token) {
-  qDebug() << "receive file transfer exposure with ip:" << ip
-           << " path:" << path << " token:" << token;
+void ForDebug::sendFileContent(const QString ip,
+                               const QString username,
+                               const QString path,
+                               const QByteArray& data) {
+  this->core->sendFileContent(ip, username, path, data);
 }
 
-void ForDebug::debugReceiveTransferRequest(QString ip,
-                                           QString path,
-                                           QString token) {
-  qDebug() << "receive file transfer request with ip:" << ip << " path:" << path
-           << " token:" << token;
+void ForDebug::sendTransferDeny(QString ip,
+                                QString username,
+                                LunaConstant::ExceptionType exception) {
+  this->core->sendTransferDeny(ip, username, exception);
 }
 
-void ForDebug::debugReceiveFileTransferDeny(QString ip, QString originPath) {
-  qDebug() << "receive file transfer deny with ip:" << ip
-           << " path:" << originPath;
+QMap<QString, AliveNode*>* ForDebug::getMap() {
+  return core->getAliveNodeMap();
 }
 
-void ForDebug::debugReceiveError(QString ip,
-                                 LunaConstant::ExceptionType exception) {
-  qDebug() << "receive file transfer error with ip:" << ip
-           << " exception:" << exception;
+void ForDebug::findNewNode(QString ip, QString username) {
+  qDebug() << "find new node ip:" << ip << " username: " << username;
 }
 
-void ForDebug::debugJsonParseError(const QByteArray& errorData) {
-  qDebug() << "catch error:" << errorData;
+void ForDebug::fileSending(QString ip, QString username) {
+  qDebug() << "file is sending to " << ip << " with " << username;
 }
 
-/* file transfer */
-void ForDebug::debugGetTransferComfirm(QString ip,
-                                       QString name,
-                                       const QByteArray& fileContent) {
-  //  qDebug() << "get file content from " << ip << ":" << name << ":"
-  //           << fileContent;
+void ForDebug::receiveFileContent(QString ip,
+                                  QString username,
+                                  QString name,
+                                  const QByteArray& fileContent) {
+  qDebug() << "receive file content with ip:" << ip << " username:" << username
+           << " filename:" << name;
 
   QFile file("/Users/vaskka/Desktop/ttt/" + name);
-
-  file.open(QFile::ReadWrite);
+  file.open(QFile::WriteOnly);
 
   file.write(fileContent);
 }
 
-void ForDebug::debugFileSending(QString ip) {
-  qDebug() << "file is sending to " << ip;
+void ForDebug::receiveFileExposure(QString ip, QString username, QString path) {
+  qDebug() << "find file exposure with ip:" << ip << " username:" << username
+           << " path:" << path;
+}
+
+void ForDebug::receiveTransferDeny(QString ip,
+                                   QString username,
+                                   QString originPath) {
+  qDebug() << "get transfer deny with ip:" << ip << " username:" << username
+           << " path:" << originPath;
+}
+
+void ForDebug::requestPassAuthorize(QString ip,
+                                    QString username,
+                                    QString path) {
+  qDebug() << "receive file request(already authorize): " << path
+           << " with ip:" << ip << " username:" << username;
+}
+
+void ForDebug::receiveError(QString ip,
+                            QString username,
+                            LunaConstant::ExceptionType exception) {
+  qDebug() << "receive Exception " << exception << " with ip:" << ip
+           << " username:" << username;
 }

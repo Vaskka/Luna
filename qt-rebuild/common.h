@@ -121,6 +121,9 @@ static const unsigned int FILE_CONTROL_PORT = 4002;
 /* 文件内容传输通过4003端口传输 */
 static const unsigned int FILE_TRANSFER_PORT = 4003;
 
+/* token 超时毫秒数 */
+static const qint32 TOKEN_TIMEOUT_MSEC = 5 * 60 * 1000;
+
 }  // namespace LunaConstant
 
 ///**

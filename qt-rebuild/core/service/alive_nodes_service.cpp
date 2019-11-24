@@ -67,8 +67,13 @@ void AliveNodesService::insertPathAndTokenInfo(const QString ip,
                                                const QString token) {
   QString identify = AliveNode::getIdentifyKey(ip, username);
 
-  // 搜索 node 设置其path和token，没搜索到直接 return
+  // 搜索 node 设置其path和token，没搜索到直接为其增加新的值
   this->doAppendPathAndToken(identify, path, token);
+
+  AliveNode* newNode = new AliveNode(ip, username);
+  newNode->appendTransferUnit(path, token);
+
+  this->doInsert(*newNode);
 }
 
 /**
@@ -86,6 +91,44 @@ AliveNode* AliveNodesService::getNodeFromIpAndUsername(const QString ip,
   }
 
   return nullptr;
+}
+
+/**
+ * @brief AliveNodesService::getMap 得到活跃节点的Map
+ * @return QMap&lt;QString, AliveNode*&gt; map
+ */
+QMap<QString, AliveNode*>* AliveNodesService::getMap() const {
+  return this->map;
+}
+
+/**
+ * @brief searchToken  搜索ip-username对应path的token
+ * @param ip ip
+ * @param username username
+ * @param path path
+ * @return QString
+ */
+QString AliveNodesService::searchToken(QString ip,
+                                       QString username,
+                                       QString path) {
+  QString id = AliveNode::getIdentifyKey(ip, username);
+
+  if (this->map->contains(id)) {
+    AliveNode node = *(*(this->map))[id];
+
+    QLinkedList<FileUnit*>* innerList = node.getTransferList();
+
+    QLinkedListIterator<FileUnit*> it(*innerList);
+    while (it.hasNext()) {
+      FileUnit* unit = it.next();
+      if (unit->getPath() == path) {
+        return unit->getToken();
+      }
+    }
+  }
+
+  // 没找到返回空字
+  return QString("");
 }
 
 /* getter and setter */

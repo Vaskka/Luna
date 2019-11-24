@@ -4,6 +4,13 @@
  * @brief LunaCore::init 初始化、启动服务
  */
 void LunaCore::init() {
+  // 分配内存
+  this->boardcastService = new BoardcastService(this->username);
+  this->controlService = new FileControlService;
+  this->transferService = new FileTransferService;
+  this->aliveNodeService = new AliveNodesService;
+  this->auth = new Authorize(LunaConstant::TOKEN_TIMEOUT_MSEC);
+
   // init service
   this->boardcastService->initService();
   this->controlService->initService();
@@ -13,15 +20,8 @@ void LunaCore::init() {
   this->boardcastService->runService();
   this->controlService->runService();
   this->transferService->runService();
-}
 
-/**
- * @brief LunaCore::LunaCore 默认构造
- * @param parent parent
- * @param username 'LunaNode'
- */
-LunaCore::LunaCore(QObject* parent, QString username) : QObject(parent) {
-  this->username = username;
+  /* connect */
   // 广播发现
   connect(this->boardcastService, &BoardcastService::appendNewIp, this,
           &LunaCore::dealBoardcastFound);
@@ -53,11 +53,22 @@ LunaCore::LunaCore(QObject* parent, QString username) : QObject(parent) {
 }
 
 /**
+ * @brief LunaCore::LunaCore 默认构造
+ * @param parent parent
+ * @param username 'LunaNode'
+ */
+LunaCore::LunaCore(QObject* parent, QString username) : QObject(parent) {
+  this->username = username;
+  this->init();
+}
+
+/**
  * @brief LunaCore::LunaCore 指定 用户名的构造
  * @param username username
  */
 LunaCore::LunaCore(QString username) {
   this->username = username;
+  this->init();
 }
 
 /**
@@ -82,10 +93,11 @@ LunaCore::~LunaCore() {
  * @param path path
  * @param token token
  */
-void LunaCore::sendFileExposure(QString ip,
-                                QString username,
-                                QString path,
-                                QString token) {
+void LunaCore::sendFileExposure(QString ip, QString username, QString path) {
+  // 向鉴权中心申请唯一token
+  QString token = this->auth->applyUniqueToken(ip, username, path);
+
+  // 传输控制层 执行发送
   this->controlService->sendFileExposure(ip, username, path, token);
 }
 
@@ -96,10 +108,11 @@ void LunaCore::sendFileExposure(QString ip,
  * @param token token
  * @param path path
  */
-void LunaCore::sendFileRequest(QString ip,
-                               QString username,
-                               QString token,
-                               QString path) {
+void LunaCore::sendFileRequest(QString ip, QString username, QString path) {
+  // 使用活跃节点管理服务搜索相应的token
+  QString token = this->aliveNodeService->searchToken(ip, username, path);
+
+  // 传输控制层 执行发送
   this->controlService->sendFileRequest(ip, username, token, path);
 }
 
@@ -145,6 +158,14 @@ void LunaCore::setUsername(const QString& value) {
 }
 
 /**
+ * @brief getAliveNodeMap 获得活跃节点映射表
+ * @return QMap&lt;QString, AliveNode*&gt;
+ */
+QMap<QString, AliveNode*>* LunaCore::getAliveNodeMap() {
+  return this->aliveNodeService->getMap();
+}
+
+/**
  * @brief dealComingExposure 处理文件暴露
  * @param ip ip
  * @param username username
@@ -156,6 +177,9 @@ void LunaCore::dealExposureComing(QString ip,
                                   QString path,
                                   QString token) {
   this->aliveNodeService->insertPathAndTokenInfo(ip, username, path, token);
+
+  // 通知并向上层隐藏token
+  emit receiveFileExposure(ip, username, path);
 }
 
 /**
@@ -173,6 +197,7 @@ void LunaCore::dealRequestComing(QString ip,
   if (!this->auth->checkIfTokenValid(token)) {
     this->sendTransferDeny(ip, username,
                            LunaConstant::ExceptionType::AuthError);
+    return;
   }
 
   // 鉴权成功隐藏token通知上层

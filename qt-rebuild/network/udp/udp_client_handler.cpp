@@ -31,7 +31,4 @@ void UdpClient::processBoardcast() {
   if (len != this->boardcaseContent->length()) {
     return;
   }
-
-  QString s(*this->boardcaseContent);
-  qDebug() << s;
 }

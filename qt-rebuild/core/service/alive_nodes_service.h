@@ -136,6 +136,15 @@ class AliveNodesService {
    * @return
    */
   QMap<QString, AliveNode*>* getMap() const;
+
+  /**
+   * @brief searchToken  搜索ip-username对应path的token
+   * @param ip ip
+   * @param username username
+   * @param path path
+   * @return QString
+   */
+  QString searchToken(QString ip, QString username, QString path);
 };
 
 #endif  // ALIVENODESSERVICE_H

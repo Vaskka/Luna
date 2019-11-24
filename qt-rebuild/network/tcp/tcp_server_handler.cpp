@@ -19,7 +19,6 @@ TcpServerHandler::TcpServerHandler(quint16 port) {
 
   // listening
   if (!server->listen(QHostAddress::Any, port)) {
-    qDebug() << server->errorString();
     return;
   }
 
@@ -51,17 +50,12 @@ void TcpServerHandler::serverReceivedHandler(qintptr desc,
 }
 
 void TcpServerHandler::clientConnected(qintptr desc, QTcpSocket* socket) {
-  // test
-  qDebug() << desc << " is connected\n";
-
   // 出发处理内容的回调
   connect(socket, &QTcpSocket::readyRead,
           [=] { emit serverReceived(desc, socket, socket->readAll()); });
 }
 
-void TcpServerHandler::clientDisconnected(qintptr desc) {
-  qDebug() << desc << " is disconnected";
-}
+void TcpServerHandler::clientDisconnected(qintptr desc) {}
 
 TcpServerHandler::~TcpServerHandler() {
   server->close();

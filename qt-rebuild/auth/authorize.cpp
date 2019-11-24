@@ -6,19 +6,18 @@
  * @return bool
  */
 bool AuthDatabaseHandler::checkIfTokenValid(QString token) {
+  // token 没找到
+  qint32 tokenCount = getFieldCount("token", token);
+  qDebug() << "======" << tokenCount;
+
+  // 根据token获取剩余数据
   QMap<QString, MergeQIntegerAndQString> map;
 
   map["token"] = MergeQIntegerAndQString(token);
 
   QSqlQuery query = getDataFromDatabase(map);
-
-  // token 没找到
-  if (!query.size()) {
-    emit tokenNotFound(token, query.lastError().text());
-    return false;
-  }
-
   QSqlRecord r = query.record();
+
   int id = r.indexOf("id");
   int tokenCol = r.indexOf("token");
   int createTimeCol = r.indexOf("createtime");
@@ -229,12 +228,31 @@ void AuthDatabaseHandler::createTableWithName(QString name) {  // 创建table
 }
 
 /**
- * @brief AuthDatabaseHandler::AuthDatabaseHandler
- * @param table 表名
+ * @brief getFieldCount 获得某个字段的个数
+ * @param field field
+ * @return qint32
  */
-AuthDatabaseHandler::AuthDatabaseHandler(QString table)
-    : DatabaseHandler(table) {
-  createTableWithName(table);
+qint32 AuthDatabaseHandler::getFieldCount(QString field, QString fieldValue) {
+  QSqlQuery sqlQuery;
+  QMap<QString, MergeQIntegerAndQString> where;
+  where.insert(field, MergeQIntegerAndQString(fieldValue));
+
+  QString whereString = DatabaseHandler::concatWhereString(where);
+
+  if (!sqlQuery.exec("select count(1) from " + this->tableName + " where " +
+                     whereString)) {
+    QString errmsg = "Error: Fail to count field:" + field +
+                     " with value:" + fieldValue + "." +
+                     sqlQuery.lastError().text();
+    QMap<QString, MergeQIntegerAndQString> errmap;
+    emit queryError(errmap, errmsg);
+  }
+  qint32 count = 0;
+  while (sqlQuery.next()) {
+    count++;
+  }
+
+  return count;
 }
 
 /**
@@ -326,7 +344,7 @@ QString AuthItem::getValuesString(void) {
  * @brief Authorize::Authorize auth-construct
  * @param timeLimit
  */
-Authorize::Authorize(int timeLimit) {
+Authorize::Authorize(qint32 timeLimit) {
   this->timeLimit = timeLimit;
   this->handler = new AuthDatabaseHandler(QString("auth"), this->timeLimit);
 }
@@ -367,7 +385,7 @@ QString Authorize::getRandomSalt(void) {
 }
 
 /**
- * @brief Authorize::getTimeout 获得超时秒数
+ * @brief Authorize::getTimeout 获得超时毫秒数
  * @return qint32
  */
 qint32 Authorize::getTimeout() const {
