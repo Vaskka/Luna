@@ -1,9 +1,8 @@
-QT += core network sql
+QT       += core gui sql network
 
-QT -= gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11 console
-CONFIG -= app_bundle
+CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -24,7 +23,8 @@ SOURCES += \
         core/service/boardcast_service.cpp \
         core/service/file_control_service.cpp \
         core/service/file_transfer_service.cpp \
-        fordebug.cpp \
+    extra/message_manager.cpp \
+    extra/user_unit_for_view.cpp \
         io/database_handler.cpp \
         io/iocenter.cpp \
         main.cpp \
@@ -34,14 +34,13 @@ SOURCES += \
         network/tcp/tcp_server_private.cpp \
         network/udp/udp_client_handler.cpp \
         network/udp/udp_server_handler.cpp \
-        utils/util.cpp
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+        utils/util.cpp \
+    mainwindow.cpp
 
 HEADERS += \
+    extra/message_manager.h \
+    extra/user_unit_for_view.h \
+    mainwindow.h \
     auth/authorize.h \
     common.h \
     core/luna_core.h \
@@ -49,7 +48,6 @@ HEADERS += \
     core/service/boardcast_service.h \
     core/service/file_control_service.h \
     core/service/file_transfer_service.h \
-    fordebug.h \
     io/database_handler.h \
     io/iocenter.h \
     network/tcp/tcp_client_handler.h \
@@ -60,4 +58,10 @@ HEADERS += \
     network/udp/udp_server_handler.h \
     utils/util.h
 
-FORMS +=
+FORMS += \
+    mainwindow.ui
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
