@@ -40,7 +40,8 @@ AliveNodesService::AliveNodesService() {
  */
 bool AliveNodesService::insertAliveMakeSureUnique(const QString ip,
                                                   const QString username) {
-  AliveNode* newNode = new AliveNode(ip, username);
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+  AliveNode* newNode = new AliveNode(realIp, username);
   QString newNodeId =
       AliveNode::getIdentifyKey(newNode->getIp(), newNode->getUsername());
 
@@ -84,7 +85,8 @@ void AliveNodesService::insertPathAndTokenInfo(const QString ip,
  */
 AliveNode* AliveNodesService::getNodeFromIpAndUsername(const QString ip,
                                                        const QString username) {
-  QString id = AliveNode::getIdentifyKey(ip, username);
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+  QString id = AliveNode::getIdentifyKey(realIp, username);
 
   if (this->map->contains(id)) {
     return (*(this->map))[id];
@@ -111,7 +113,8 @@ QMap<QString, AliveNode*>* AliveNodesService::getMap() const {
 QString AliveNodesService::searchToken(QString ip,
                                        QString username,
                                        QString path) {
-  QString id = AliveNode::getIdentifyKey(ip, username);
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+  QString id = AliveNode::getIdentifyKey(realIp, username);
 
   if (this->map->contains(id)) {
     AliveNode node = *(*(this->map))[id];
@@ -157,7 +160,7 @@ QLinkedList<FileUnit*>* AliveNode::getTransferList() const {
  * @param token token
  */
 AliveNode::AliveNode(QString ip, QString username) {
-  this->ip = ip;
+  this->ip = Util::changeCompatibleIpv6ToIpv4(ip);
   this->username = username;
   this->transferList = new QLinkedList<FileUnit*>;
 }

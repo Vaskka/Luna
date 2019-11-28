@@ -2,9 +2,12 @@
 #define MAINWINDOW_H
 
 #include <core/luna_core.h>
+#include <extra/user_unit_for_view.h>
 
+#include <QFileDialog>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QStandardPaths>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,6 +21,10 @@ class MainWindow : public QMainWindow {
  public:
   MainWindow(QWidget* parent = nullptr);
   ~MainWindow();
+
+  QString getUsername() const;
+
+  void setUsername(const QString& value);
 
  signals:
 
@@ -106,9 +113,56 @@ class MainWindow : public QMainWindow {
                         QString username,
                         LunaConstant::ExceptionType exception);
 
+  /**
+   * @brief opError core层错误信息
+   * @param errorMsg 错误信息
+   */
+  void dealOpError(QString errorMsg);
+
+  /**
+   * @brief on_chooseFileToExp_clicked 处理选择分享的文件
+   */
+  void on_chooseFileToExp_clicked();
+
+  /**
+   * @brief MainWindow::on_userFileListWidget_itemDoubleClicked
+   * 处理双击某一个文件
+   * @param item QListWidgetItem*
+   */
+  void on_userFileListWidget_itemDoubleClicked(QListWidgetItem* item);
+
+  /**
+   * @brief MainWindow::on_pushButton_clicked 选择文件存储文件夹
+   */
+  void on_chooseFileToSave_clicked();
+
+  /**
+   * @brief MainWindow::on_userListWidget_itemActivated 选择的用户被点击或双击
+   * @param item
+   */
+  void on_userListWidget_itemActivated(QListWidgetItem* item);
+
  private:
   Ui::MainWindow* ui;
 
-  QTimer timer;
+  LunaCore* core;
+
+  QString currentIp;
+
+  QString currentUsername;
+
+  QString fileSavePath;
+
+  /**
+   * @brief updateFileList 更新文件列表
+   * @param currentIp 当前ip
+   * @param currentUsername 当前username
+   */
+  void updateFileList(QString currentIp, QString currentUsername);
+
+  /**
+   * @brief updateUserList 更新用户列表
+   */
+  void updateUserList();
 };
 #endif  // MAINWINDOW_H

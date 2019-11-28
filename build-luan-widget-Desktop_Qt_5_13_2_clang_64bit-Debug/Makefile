@@ -59,6 +59,8 @@ SOURCES       = ../luan-widget/auth/authorize.cpp \
 		../luan-widget/core/service/boardcast_service.cpp \
 		../luan-widget/core/service/file_control_service.cpp \
 		../luan-widget/core/service/file_transfer_service.cpp \
+		../luan-widget/extra/message_manager.cpp \
+		../luan-widget/extra/user_unit_for_view.cpp \
 		../luan-widget/io/database_handler.cpp \
 		../luan-widget/io/iocenter.cpp \
 		../luan-widget/main.cpp \
@@ -69,7 +71,8 @@ SOURCES       = ../luan-widget/auth/authorize.cpp \
 		../luan-widget/network/udp/udp_client_handler.cpp \
 		../luan-widget/network/udp/udp_server_handler.cpp \
 		../luan-widget/utils/util.cpp \
-		../luan-widget/mainwindow.cpp moc_mainwindow.cpp \
+		../luan-widget/mainwindow.cpp moc_message_manager.cpp \
+		moc_mainwindow.cpp \
 		moc_authorize.cpp \
 		moc_luna_core.cpp \
 		moc_boardcast_service.cpp \
@@ -90,6 +93,8 @@ OBJECTS       = authorize.o \
 		boardcast_service.o \
 		file_control_service.o \
 		file_transfer_service.o \
+		message_manager.o \
+		user_unit_for_view.o \
 		database_handler.o \
 		iocenter.o \
 		main.o \
@@ -101,6 +106,7 @@ OBJECTS       = authorize.o \
 		udp_server_handler.o \
 		util.o \
 		mainwindow.o \
+		moc_message_manager.o \
 		moc_mainwindow.o \
 		moc_authorize.o \
 		moc_luna_core.o \
@@ -305,7 +311,9 @@ DIST          = ../../../Documents/dev/qt5.13.2/5.13.2/clang_64/mkspecs/features
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/mkspecs/features/exceptions.prf \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/mkspecs/features/yacc.prf \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/mkspecs/features/lex.prf \
-		../luan-widget/luan-widget.pro ../luan-widget/mainwindow.h \
+		../luan-widget/luan-widget.pro ../luan-widget/extra/message_manager.h \
+		../luan-widget/extra/user_unit_for_view.h \
+		../luan-widget/mainwindow.h \
 		../luan-widget/auth/authorize.h \
 		../luan-widget/common.h \
 		../luan-widget/core/luna_core.h \
@@ -328,6 +336,8 @@ DIST          = ../../../Documents/dev/qt5.13.2/5.13.2/clang_64/mkspecs/features
 		../luan-widget/core/service/boardcast_service.cpp \
 		../luan-widget/core/service/file_control_service.cpp \
 		../luan-widget/core/service/file_transfer_service.cpp \
+		../luan-widget/extra/message_manager.cpp \
+		../luan-widget/extra/user_unit_for_view.cpp \
 		../luan-widget/io/database_handler.cpp \
 		../luan-widget/io/iocenter.cpp \
 		../luan-widget/main.cpp \
@@ -784,8 +794,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../Documents/dev/qt5.13.2/5.13.2/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../luan-widget/mainwindow.h ../luan-widget/auth/authorize.h ../luan-widget/common.h ../luan-widget/core/luna_core.h ../luan-widget/core/service/alive_nodes_service.h ../luan-widget/core/service/boardcast_service.h ../luan-widget/core/service/file_control_service.h ../luan-widget/core/service/file_transfer_service.h ../luan-widget/io/database_handler.h ../luan-widget/io/iocenter.h ../luan-widget/network/tcp/tcp_client_handler.h ../luan-widget/network/tcp/tcp_server.h ../luan-widget/network/tcp/tcp_server_handler.h ../luan-widget/network/tcp/tcp_server_private.h ../luan-widget/network/udp/udp_client_handler.h ../luan-widget/network/udp/udp_server_handler.h ../luan-widget/utils/util.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../luan-widget/auth/authorize.cpp ../luan-widget/common.cpp ../luan-widget/core/luna_core.cpp ../luan-widget/core/service/alive_nodes_service.cpp ../luan-widget/core/service/boardcast_service.cpp ../luan-widget/core/service/file_control_service.cpp ../luan-widget/core/service/file_transfer_service.cpp ../luan-widget/io/database_handler.cpp ../luan-widget/io/iocenter.cpp ../luan-widget/main.cpp ../luan-widget/network/tcp/tcp_client_handler.cpp ../luan-widget/network/tcp/tcp_server.cpp ../luan-widget/network/tcp/tcp_server_handler.cpp ../luan-widget/network/tcp/tcp_server_private.cpp ../luan-widget/network/udp/udp_client_handler.cpp ../luan-widget/network/udp/udp_server_handler.cpp ../luan-widget/utils/util.cpp ../luan-widget/mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../luan-widget/extra/message_manager.h ../luan-widget/extra/user_unit_for_view.h ../luan-widget/mainwindow.h ../luan-widget/auth/authorize.h ../luan-widget/common.h ../luan-widget/core/luna_core.h ../luan-widget/core/service/alive_nodes_service.h ../luan-widget/core/service/boardcast_service.h ../luan-widget/core/service/file_control_service.h ../luan-widget/core/service/file_transfer_service.h ../luan-widget/io/database_handler.h ../luan-widget/io/iocenter.h ../luan-widget/network/tcp/tcp_client_handler.h ../luan-widget/network/tcp/tcp_server.h ../luan-widget/network/tcp/tcp_server_handler.h ../luan-widget/network/tcp/tcp_server_private.h ../luan-widget/network/udp/udp_client_handler.h ../luan-widget/network/udp/udp_server_handler.h ../luan-widget/utils/util.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../luan-widget/auth/authorize.cpp ../luan-widget/common.cpp ../luan-widget/core/luna_core.cpp ../luan-widget/core/service/alive_nodes_service.cpp ../luan-widget/core/service/boardcast_service.cpp ../luan-widget/core/service/file_control_service.cpp ../luan-widget/core/service/file_transfer_service.cpp ../luan-widget/extra/message_manager.cpp ../luan-widget/extra/user_unit_for_view.cpp ../luan-widget/io/database_handler.cpp ../luan-widget/io/iocenter.cpp ../luan-widget/main.cpp ../luan-widget/network/tcp/tcp_client_handler.cpp ../luan-widget/network/tcp/tcp_server.cpp ../luan-widget/network/tcp/tcp_server_handler.cpp ../luan-widget/network/tcp/tcp_server_private.cpp ../luan-widget/network/udp/udp_client_handler.cpp ../luan-widget/network/udp/udp_server_handler.cpp ../luan-widget/utils/util.cpp ../luan-widget/mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../luan-widget/mainwindow.ui $(DISTDIR)/
 
 
@@ -821,12 +831,91 @@ compiler_moc_predefs_clean:
 moc_predefs.h: ../../../Documents/dev/qt5.13.2/5.13.2/clang_64/mkspecs/features/data/dummy.cpp
 	/Library/Developer/CommandLineTools/usr/bin/clang++ -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -mmacosx-version-min=10.12 -Wall -W -dM -E -o moc_predefs.h ../../../Documents/dev/qt5.13.2/5.13.2/clang_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_authorize.cpp moc_luna_core.cpp moc_boardcast_service.cpp moc_file_control_service.cpp moc_file_transfer_service.cpp moc_database_handler.cpp moc_iocenter.cpp moc_tcp_client_handler.cpp moc_tcp_server.cpp moc_tcp_server_handler.cpp moc_tcp_server_private.cpp moc_udp_client_handler.cpp moc_udp_server_handler.cpp
+compiler_moc_header_make_all: moc_message_manager.cpp moc_mainwindow.cpp moc_authorize.cpp moc_luna_core.cpp moc_boardcast_service.cpp moc_file_control_service.cpp moc_file_transfer_service.cpp moc_database_handler.cpp moc_iocenter.cpp moc_tcp_client_handler.cpp moc_tcp_server.cpp moc_tcp_server_handler.cpp moc_tcp_server_private.cpp moc_udp_client_handler.cpp moc_udp_server_handler.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_authorize.cpp moc_luna_core.cpp moc_boardcast_service.cpp moc_file_control_service.cpp moc_file_transfer_service.cpp moc_database_handler.cpp moc_iocenter.cpp moc_tcp_client_handler.cpp moc_tcp_server.cpp moc_tcp_server_handler.cpp moc_tcp_server_private.cpp moc_udp_client_handler.cpp moc_udp_server_handler.cpp
+	-$(DEL_FILE) moc_message_manager.cpp moc_mainwindow.cpp moc_authorize.cpp moc_luna_core.cpp moc_boardcast_service.cpp moc_file_control_service.cpp moc_file_transfer_service.cpp moc_database_handler.cpp moc_iocenter.cpp moc_tcp_client_handler.cpp moc_tcp_server.cpp moc_tcp_server_handler.cpp moc_tcp_server_private.cpp moc_udp_client_handler.cpp moc_udp_server_handler.cpp
+moc_message_manager.cpp: ../luan-widget/extra/message_manager.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		moc_predefs.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/bin/moc
+	/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/bin/moc $(DEFINES) --include /Users/vaskka/Desktop/Luna/build-luan-widget-Desktop_Qt_5_13_2_clang_64bit-Debug/moc_predefs.h -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/mkspecs/macx-clang -I/Users/vaskka/Desktop/Luna/luan-widget -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtGui.framework/Headers -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include -I/Library/Developer/CommandLineTools/usr/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -F/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib ../luan-widget/extra/message_manager.h -o moc_message_manager.cpp
+
 moc_mainwindow.cpp: ../luan-widget/mainwindow.h \
+		../luan-widget/core/luna_core.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		../luan-widget/auth/authorize.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QCryptographicHash \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qcryptographichash.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QDateTime \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlDatabase \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqldatabase.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlQuery \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqlquery.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlRecord \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqlrecord.h \
+		../luan-widget/io/database_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qdebug.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlError \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqlerror.h \
+		../luan-widget/common.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QJsonDocument \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qjsondocument.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QJsonObject \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qjsonobject.h \
+		../luan-widget/utils/util.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QDate \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QFileInfo \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QHostInfo \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkInterface \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QRegExp \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qregexp.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QUuid \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/quuid.h \
+		../luan-widget/core/service/alive_nodes_service.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QLinkedList \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qlinkedlist.h \
+		../luan-widget/core/service/boardcast_service.h \
+		../luan-widget/network/udp/udp_client_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QHostAddress \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostaddress.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QTimer \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QUdpSocket \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qudpsocket.h \
+		../luan-widget/network/udp/udp_server_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkDatagram \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkdatagram.h \
+		../luan-widget/core/service/file_control_service.h \
+		../luan-widget/network/tcp/tcp_client_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QTcpSocket \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qtcpsocket.h \
+		../luan-widget/network/tcp/tcp_server_handler.h \
+		../luan-widget/network/tcp/tcp_server.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QTcpServer \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qtcpserver.h \
+		../luan-widget/core/service/file_transfer_service.h \
+		../luan-widget/extra/user_unit_for_view.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QListWidget \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QVector \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qvector.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QFileDialog \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qfiledialog.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QMessageBox \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qmessagebox.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QStandardPaths \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qstandardpaths.h \
 		moc_predefs.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/bin/moc
 	/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/bin/moc $(DEFINES) --include /Users/vaskka/Desktop/Luna/build-luan-widget-Desktop_Qt_5_13_2_clang_64bit-Debug/moc_predefs.h -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/mkspecs/macx-clang -I/Users/vaskka/Desktop/Luna/luan-widget -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtGui.framework/Headers -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers -I/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include -I/Library/Developer/CommandLineTools/usr/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -F/Users/vaskka/Documents/dev/qt5.13.2/5.13.2/clang_64/lib ../luan-widget/mainwindow.h -o moc_mainwindow.cpp
@@ -863,6 +952,8 @@ moc_authorize.cpp: ../luan-widget/auth/authorize.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkInterface \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QRegExp \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qregexp.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QUuid \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/quuid.h \
 		moc_predefs.h \
@@ -902,6 +993,8 @@ moc_luna_core.cpp: ../luan-widget/core/luna_core.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkInterface \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QRegExp \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qregexp.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QUuid \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/quuid.h \
 		../luan-widget/core/service/alive_nodes_service.h \
@@ -1003,6 +1096,8 @@ moc_file_transfer_service.cpp: ../luan-widget/core/service/file_transfer_service
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkInterface \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QRegExp \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qregexp.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QUuid \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/quuid.h \
 		moc_predefs.h \
@@ -1159,6 +1254,8 @@ authorize.o: ../luan-widget/auth/authorize.cpp ../luan-widget/auth/authorize.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkInterface \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QRegExp \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qregexp.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QUuid \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/quuid.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o authorize.o ../luan-widget/auth/authorize.cpp
@@ -1205,6 +1302,8 @@ luna_core.o: ../luan-widget/core/luna_core.cpp ../luan-widget/core/luna_core.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkInterface \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QRegExp \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qregexp.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QUuid \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/quuid.h \
 		../luan-widget/core/service/alive_nodes_service.h \
@@ -1233,10 +1332,22 @@ luna_core.o: ../luan-widget/core/luna_core.cpp ../luan-widget/core/luna_core.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o luna_core.o ../luan-widget/core/luna_core.cpp
 
 alive_nodes_service.o: ../luan-widget/core/service/alive_nodes_service.cpp ../luan-widget/core/service/alive_nodes_service.h \
+		../luan-widget/utils/util.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QCryptographicHash \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qcryptographichash.h \
-		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QDateTime \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QDate \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QDateTime \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QFileInfo \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QHostInfo \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkInterface \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QRegExp \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qregexp.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QUuid \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/quuid.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QLinkedList \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qlinkedlist.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QMap \
@@ -1313,9 +1424,28 @@ file_transfer_service.o: ../luan-widget/core/service/file_transfer_service.cpp .
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkInterface \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QRegExp \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qregexp.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QUuid \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/quuid.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o file_transfer_service.o ../luan-widget/core/service/file_transfer_service.cpp
+
+message_manager.o: ../luan-widget/extra/message_manager.cpp ../luan-widget/extra/message_manager.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qobject.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o message_manager.o ../luan-widget/extra/message_manager.cpp
+
+user_unit_for_view.o: ../luan-widget/extra/user_unit_for_view.cpp ../luan-widget/extra/user_unit_for_view.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QListWidget \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QVector \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qvector.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o user_unit_for_view.o ../luan-widget/extra/user_unit_for_view.cpp
 
 database_handler.o: ../luan-widget/io/database_handler.cpp ../luan-widget/io/database_handler.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qdebug.h \
@@ -1345,11 +1475,83 @@ iocenter.o: ../luan-widget/io/iocenter.cpp ../luan-widget/io/iocenter.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qobject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o iocenter.o ../luan-widget/io/iocenter.cpp
 
-main.o: ../luan-widget/main.cpp ../luan-widget/mainwindow.h \
+main.o: ../luan-widget/main.cpp ../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QApplication \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
+		../luan-widget/mainwindow.h \
+		../luan-widget/core/luna_core.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		../luan-widget/auth/authorize.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QCryptographicHash \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qcryptographichash.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QDateTime \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlDatabase \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqldatabase.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlQuery \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqlquery.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlRecord \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqlrecord.h \
+		../luan-widget/io/database_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qdebug.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlError \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqlerror.h \
+		../luan-widget/common.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QJsonDocument \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qjsondocument.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QJsonObject \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qjsonobject.h \
+		../luan-widget/utils/util.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QDate \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QFileInfo \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QHostInfo \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkInterface \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QRegExp \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qregexp.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QUuid \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/quuid.h \
+		../luan-widget/core/service/alive_nodes_service.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QLinkedList \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qlinkedlist.h \
+		../luan-widget/core/service/boardcast_service.h \
+		../luan-widget/network/udp/udp_client_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QHostAddress \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostaddress.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QTimer \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QUdpSocket \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qudpsocket.h \
+		../luan-widget/network/udp/udp_server_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkDatagram \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkdatagram.h \
+		../luan-widget/core/service/file_control_service.h \
+		../luan-widget/network/tcp/tcp_client_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QTcpSocket \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qtcpsocket.h \
+		../luan-widget/network/tcp/tcp_server_handler.h \
+		../luan-widget/network/tcp/tcp_server.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QTcpServer \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qtcpserver.h \
+		../luan-widget/core/service/file_transfer_service.h \
+		../luan-widget/extra/user_unit_for_view.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QListWidget \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QVector \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qvector.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QFileDialog \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qfiledialog.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
-		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QApplication \
-		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qapplication.h
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QMessageBox \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qmessagebox.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QStandardPaths \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qstandardpaths.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../luan-widget/main.cpp
 
 tcp_client_handler.o: ../luan-widget/network/tcp/tcp_client_handler.cpp ../luan-widget/network/tcp/tcp_client_handler.h \
@@ -1418,15 +1620,93 @@ util.o: ../luan-widget/utils/util.cpp ../luan-widget/utils/util.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkInterface \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QRegExp \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qregexp.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QUuid \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/quuid.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o util.o ../luan-widget/utils/util.cpp
 
 mainwindow.o: ../luan-widget/mainwindow.cpp ../luan-widget/mainwindow.h \
+		../luan-widget/core/luna_core.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QMap \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qmap.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		../luan-widget/auth/authorize.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QCryptographicHash \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qcryptographichash.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QDateTime \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlDatabase \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqldatabase.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlQuery \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqlquery.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlRecord \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqlrecord.h \
+		../luan-widget/io/database_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qdebug.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/QSqlError \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtSql.framework/Headers/qsqlerror.h \
+		../luan-widget/common.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QJsonDocument \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qjsondocument.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QJsonObject \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qjsonobject.h \
+		../luan-widget/utils/util.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QDate \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QFileInfo \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QHostInfo \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkInterface \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QRegExp \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qregexp.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QUuid \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/quuid.h \
+		../luan-widget/core/service/alive_nodes_service.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QLinkedList \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qlinkedlist.h \
+		../luan-widget/core/service/boardcast_service.h \
+		../luan-widget/network/udp/udp_client_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QHostAddress \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qhostaddress.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QTimer \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QUdpSocket \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qudpsocket.h \
+		../luan-widget/network/udp/udp_server_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QNetworkDatagram \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qnetworkdatagram.h \
+		../luan-widget/core/service/file_control_service.h \
+		../luan-widget/network/tcp/tcp_client_handler.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QTcpSocket \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qtcpsocket.h \
+		../luan-widget/network/tcp/tcp_server_handler.h \
+		../luan-widget/network/tcp/tcp_server.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/QTcpServer \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtNetwork.framework/Headers/qtcpserver.h \
+		../luan-widget/core/service/file_transfer_service.h \
+		../luan-widget/extra/user_unit_for_view.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QListWidget \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QVector \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qvector.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QFileDialog \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qfiledialog.h \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/QMessageBox \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtWidgets.framework/Headers/qmessagebox.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QStandardPaths \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/qstandardpaths.h \
+		../../../Documents/dev/qt5.13.2/5.13.2/clang_64/lib/QtCore.framework/Headers/QDebug \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../luan-widget/mainwindow.cpp
+
+moc_message_manager.o: moc_message_manager.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_message_manager.o moc_message_manager.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

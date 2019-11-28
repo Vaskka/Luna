@@ -94,11 +94,18 @@ LunaCore::~LunaCore() {
  * @param token token
  */
 void LunaCore::sendFileExposure(QString ip, QString username, QString path) {
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+
+  if (!this->getAliveNodeMap()->contains(
+          AliveNode::getIdentifyKey(realIp, username))) {
+    emit this->opError("用户不存在，请选择先选择一个用户");
+  }
+
   // 向鉴权中心申请唯一token
-  QString token = this->auth->applyUniqueToken(ip, username, path);
+  QString token = this->auth->applyUniqueToken(realIp, username, path);
 
   // 传输控制层 执行发送
-  this->controlService->sendFileExposure(ip, username, path, token);
+  this->controlService->sendFileExposure(realIp, username, path, token);
 }
 
 /**
@@ -109,11 +116,13 @@ void LunaCore::sendFileExposure(QString ip, QString username, QString path) {
  * @param path path
  */
 void LunaCore::sendFileRequest(QString ip, QString username, QString path) {
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+
   // 使用活跃节点管理服务搜索相应的token
-  QString token = this->aliveNodeService->searchToken(ip, username, path);
+  QString token = this->aliveNodeService->searchToken(realIp, username, path);
 
   // 传输控制层 执行发送
-  this->controlService->sendFileRequest(ip, username, token, path);
+  this->controlService->sendFileRequest(realIp, username, token, path);
 }
 
 /**
@@ -121,13 +130,26 @@ void LunaCore::sendFileRequest(QString ip, QString username, QString path) {
  * @param ip ip
  * @param username username
  * @param path path
- * @param data data
  */
 void LunaCore::sendFileContent(const QString ip,
                                const QString username,
-                               const QString path,
-                               const QByteArray& data) {
-  this->transferService->sendFileComfirm(ip, username, path, data);
+                               const QString path) {
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+
+  QFile file(path);
+
+  // try to read file content
+  if (!file.open(QFile::ReadOnly)) {
+    QString errMsg;
+    errMsg += ("Read file:" + path + "error.");
+    qDebug() << errMsg;
+    emit opError(errMsg);
+  }
+
+  // read file contemt
+  QByteArray data = file.readAll();
+
+  this->transferService->sendFileComfirm(realIp, username, path, data.data());
 }
 
 /**
@@ -138,7 +160,9 @@ void LunaCore::sendFileContent(const QString ip,
 void LunaCore::sendTransferDeny(QString ip,
                                 QString username,
                                 LunaConstant::ExceptionType exception) {
-  this->controlService->sendTransferDeny(ip, username, exception);
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+
+  this->controlService->sendTransferDeny(realIp, username, exception);
 }
 
 /**
@@ -161,8 +185,23 @@ void LunaCore::setUsername(const QString& value) {
  * @brief getAliveNodeMap 获得活跃节点映射表
  * @return QMap&lt;QString, AliveNode*&gt;
  */
-QMap<QString, AliveNode*>* LunaCore::getAliveNodeMap() {
+QMap<QString, AliveNode*>* LunaCore::getAliveNodeMap() const {
   return this->aliveNodeService->getMap();
+}
+
+/**
+ * @brief fromUsernameSearchIp 根据username查找对应ip
+ * @param username username
+ * @return QString ip
+ */
+QString LunaCore::fromUsernameSearchIp(const QString username) const {
+  for (AliveNode* node : this->getAliveNodeMap()->values()) {
+    if (node->getUsername() == username) {
+      return node->getIp();
+    }
+  }
+
+  return QString();
 }
 
 /**
@@ -176,10 +215,12 @@ void LunaCore::dealExposureComing(QString ip,
                                   QString username,
                                   QString path,
                                   QString token) {
-  this->aliveNodeService->insertPathAndTokenInfo(ip, username, path, token);
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+
+  this->aliveNodeService->insertPathAndTokenInfo(realIp, username, path, token);
 
   // 通知并向上层隐藏token
-  emit receiveFileExposure(ip, username, path);
+  emit receiveFileExposure(realIp, username, path);
 }
 
 /**
@@ -193,15 +234,17 @@ void LunaCore::dealRequestComing(QString ip,
                                  QString username,
                                  QString path,
                                  QString token) {
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+
   // 鉴权失败直接deny
   if (!this->auth->checkIfTokenValid(token)) {
-    this->sendTransferDeny(ip, username,
+    this->sendTransferDeny(realIp, username,
                            LunaConstant::ExceptionType::AuthError);
     return;
   }
 
   // 鉴权成功隐藏token通知上层
-  emit requestPassAuthorize(ip, username, path);
+  emit requestPassAuthorize(realIp, username, path);
 }
 
 /**
@@ -213,7 +256,9 @@ void LunaCore::dealRequestComing(QString ip,
 void LunaCore::dealTransferDeny(QString ip,
                                 QString username,
                                 QString originPath) {
-  emit receiveTransferDeny(ip, username, originPath);
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+
+  emit receiveTransferDeny(realIp, username, originPath);
 }
 
 /**
@@ -227,8 +272,9 @@ void LunaCore::dealFileContentComing(QString ip,
                                      QString username,
                                      QString name,
                                      const QByteArray& fileContent) {
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
   // 通知上层
-  emit receiveFileContent(ip, username, name, fileContent);
+  emit receiveFileContent(realIp, username, name, fileContent);
 }
 
 /**
@@ -238,8 +284,9 @@ void LunaCore::dealFileContentComing(QString ip,
  * @param username username
  */
 void LunaCore::dealBoardcastFound(QString ip, QString username) {
-  if (this->aliveNodeService->insertAliveMakeSureUnique(ip, username)) {
-    emit findNewNode(ip, username);
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+  if (this->aliveNodeService->insertAliveMakeSureUnique(realIp, username)) {
+    emit findNewNode(realIp, username);
   }
 }
 
@@ -249,7 +296,8 @@ void LunaCore::dealBoardcastFound(QString ip, QString username) {
  * @param username username
  */
 void LunaCore::dealFileSending(QString ip, QString username) {
-  emit fileSending(ip, username);
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+  emit fileSending(realIp, username);
 }
 
 /**
@@ -261,5 +309,6 @@ void LunaCore::dealFileSending(QString ip, QString username) {
 void LunaCore::dealError(QString ip,
                          QString username,
                          LunaConstant::ExceptionType exception) {
-  emit receiveError(ip, username, exception);
+  QString realIp = Util::changeCompatibleIpv6ToIpv4(ip);
+  emit receiveError(realIp, username, exception);
 }

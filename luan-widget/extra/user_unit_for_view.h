@@ -3,6 +3,7 @@
 
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QMap>
 #include <QObject>
 #include <QVector>
 
@@ -13,7 +14,7 @@ class UserUnitForView {
 
   QString key;
 
-  QVector<QListWidgetItem*> innerPathList;
+  QMap<QString, QListWidgetItem*> innersListWidgetItemMap;
 
  public:
   UserUnitForView(QString ip, QString username);
@@ -25,10 +26,16 @@ class UserUnitForView {
    */
   QListWidgetItem* tryAppendNewListWidgetItem(QString path);
 
+  /**
+   * @brief removeListWidgetWithPath 根据path移除ListWidget
+   * @param path  path
+   */
+  // void removeListWidgetItemWithPath(QString path);
+
   QString getKey() const;
   QString getUsername() const;
   QString getIp() const;
-  QVector<QListWidgetItem*> getInnerPathList() const;
+  QMap<QString, QListWidgetItem*> getInnerListWidgetItemMap() const;
 };
 
 #endif  // USERUNITFORVIEW_H

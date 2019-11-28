@@ -46,7 +46,6 @@ class LunaCore : public QObject {
   AliveNodesService* aliveNodeService;
 
  private:
-  /* method */
   /**
    * @brief init 启动服务等
    */
@@ -94,12 +93,10 @@ class LunaCore : public QObject {
    * @param ip ip
    * @param username username
    * @param path path
-   * @param data data
    */
   void sendFileContent(const QString ip,
                        const QString username,
-                       const QString path,
-                       const QByteArray& data);
+                       const QString path);
 
   /**
    * @brief sendTransferDeny 否认传输(鉴权失败和用户手动均可调用此方法)
@@ -127,7 +124,14 @@ class LunaCore : public QObject {
    * @brief getAliveNodeMap 获得活跃节点映射表
    * @return QMap&lt;QString, AliveNode*&gt;
    */
-  QMap<QString, AliveNode*>* getAliveNodeMap();
+  QMap<QString, AliveNode*>* getAliveNodeMap() const;
+
+  /**
+   * @brief fromUsernameSearchIp 根据username查找对应ip
+   * @param username username
+   * @return QString ip
+   */
+  QString fromUsernameSearchIp(const QString username) const;
 
  signals:
 
@@ -190,6 +194,12 @@ class LunaCore : public QObject {
   void receiveError(QString ip,
                     QString username,
                     LunaConstant::ExceptionType exception);
+
+  /**
+   * @brief opError 接口调用错误(后期需要改成异常类型可供枚举)
+   * @param errorMsg 提示上层显示给用户的信息
+   */
+  void opError(QString errorMsg);
 
  private slots:
 

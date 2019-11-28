@@ -1,6 +1,8 @@
 #ifndef ALIVENODESSERVICE_H
 #define ALIVENODESSERVICE_H
 
+#include <utils/util.h>
+
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QLinkedList>

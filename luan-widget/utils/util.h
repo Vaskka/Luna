@@ -7,6 +7,7 @@
 #include <QFileInfo>
 #include <QHostInfo>
 #include <QNetworkInterface>
+#include <QRegExp>
 #include <QUuid>
 
 class Util {
@@ -62,6 +63,13 @@ class Util {
    * @return QString
    */
   static QString fromPathGetFileName(QString path);
+
+  /**
+   * @brief changeCompatibleIpv6ToIpv4 将ipv6兼容地址转换为ipv4
+   * @param compatibleIpv6 兼容的ipv6
+   * @return ipv4
+   */
+  static QString changeCompatibleIpv6ToIpv4(QString compatibleIpv6);
 };
 
 #endif  // UTIL_H

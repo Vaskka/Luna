@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>797</width>
+    <width>1012</width>
     <height>600</height>
    </rect>
   </property>
@@ -17,10 +17,10 @@
    <widget class="QScrollArea" name="leftScroll">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>30</x>
       <y>90</y>
-      <width>201</width>
-      <height>411</height>
+      <width>221</width>
+      <height>451</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -31,8 +31,8 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>199</width>
-       <height>409</height>
+       <width>219</width>
+       <height>449</height>
       </rect>
      </property>
      <widget class="QListWidget" name="userListWidget">
@@ -40,8 +40,8 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>181</width>
-        <height>421</height>
+        <width>201</width>
+        <height>431</height>
        </rect>
       </property>
      </widget>
@@ -50,9 +50,9 @@
    <widget class="QScrollArea" name="rightScroll">
     <property name="geometry">
      <rect>
-      <x>390</x>
+      <x>290</x>
       <y>90</y>
-      <width>371</width>
+      <width>711</width>
       <height>411</height>
      </rect>
     </property>
@@ -64,7 +64,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>369</width>
+       <width>709</width>
        <height>409</height>
       </rect>
      </property>
@@ -73,8 +73,8 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>351</width>
-        <height>421</height>
+        <width>691</width>
+        <height>391</height>
        </rect>
       </property>
      </widget>
@@ -83,20 +83,20 @@
    <widget class="QLabel" name="usernameLabel">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>30</x>
       <y>20</y>
-      <width>51</width>
+      <width>81</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>用户名:</string>
+     <string>我的用户名:</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="usernameLineEdit">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>120</x>
       <y>20</y>
       <width>141</width>
       <height>21</height>
@@ -106,7 +106,7 @@
    <widget class="QLabel" name="userInNetworkLabel">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>30</x>
       <y>60</y>
       <width>111</width>
       <height>21</height>
@@ -119,7 +119,7 @@
    <widget class="QLabel" name="currentChooseUserLabelLeft">
     <property name="geometry">
      <rect>
-      <x>390</x>
+      <x>290</x>
       <y>30</y>
       <width>101</width>
       <height>16</height>
@@ -132,9 +132,9 @@
    <widget class="QLabel" name="currentChooseUserValue">
     <property name="geometry">
      <rect>
-      <x>520</x>
+      <x>400</x>
       <y>30</y>
-      <width>58</width>
+      <width>91</width>
       <height>16</height>
      </rect>
     </property>
@@ -145,27 +145,79 @@
    <widget class="QLabel" name="currentUserCanDownloadLabel">
     <property name="geometry">
      <rect>
-      <x>390</x>
+      <x>290</x>
       <y>60</y>
-      <width>141</width>
+      <width>151</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>此用户可下载的文件:</string>
+     <string>此用户可下载的文件列表:</string>
     </property>
    </widget>
    <widget class="QLabel" name="infoLabel">
     <property name="geometry">
      <rect>
-      <x>607</x>
-      <y>60</y>
-      <width>151</width>
+      <x>530</x>
+      <y>10</y>
+      <width>471</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string> </string>
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="saveFileDirTitle">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>30</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>文件保存路径:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="saveDirLabel">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>30</y>
+      <width>381</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>.</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="chooseFileToSave">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>50</y>
+      <width>151</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>选择文件存储路径</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="chooseFileToExp">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>510</y>
+      <width>191</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>选择您向别人分享的文件</string>
     </property>
    </widget>
   </widget>
@@ -174,7 +226,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>797</width>
+     <width>1012</width>
      <height>22</height>
     </rect>
    </property>

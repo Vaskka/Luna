@@ -94,3 +94,18 @@ QString Util::fromPathGetFileName(QString path) {
     return info.fileName();
   }
 }
+
+/**
+ * @brief changeCompatibleIpv6ToIpv4 将ipv6兼容地址转换为ipv4
+ * @param compatibleIpv6 兼容的ipv6
+ * @return ipv4
+ */
+QString Util::changeCompatibleIpv6ToIpv4(QString compatibleIpv6) {
+  QRegExp rxlen("^::[a-zA-Z].*:(.*)$");
+  qint32 pos = rxlen.indexIn(compatibleIpv6);
+  if (pos > -1) {
+    return rxlen.cap(1);
+  }
+
+  return compatibleIpv6;
+}
