@@ -182,25 +182,24 @@ void MainWindow::dealRequestPassAuthorize(QString ip,
   content += ' ';
   content += "请求传输文件:";
   content += path;
-  /*
-    QMessageBox::StandardButton rb =
-        QMessageBox::information(this, tr("文件传输请求确认"), content,
-                                 QMessageBox::Yes | QMessageBox::No);
-    // 判断用户的相应类型
-    switch (rb) {
-      case QMessageBox::Yes:
-        qDebug() << "Yes";
-        // this->core->sendFileContent(ip, username, path);
-        break;
-      case QMessageBox::No:
-        qDebug() << "NO";
-        // this->core->sendTransferDeny(ip, username);
-        break;
-      default:
-        break;
-    }
-  */
-  qDebug() << "q";
+
+  int result = QMessageBox::information(this, tr("文件传输请求"), content,
+                                        QMessageBox::Yes | QMessageBox::No,
+                                        QMessageBox::Yes);
+
+  // 判断用户的相应类型
+  switch (result) {
+    case QMessageBox::Yes:
+      qDebug() << "Yes";
+      this->core->sendFileContent(ip, username, path);
+      break;
+    case QMessageBox::No:
+      qDebug() << "NO";
+      this->core->sendTransferDeny(ip, username);
+      break;
+    default:
+      break;
+  }
 }
 
 /**

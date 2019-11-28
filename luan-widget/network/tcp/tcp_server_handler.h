@@ -43,7 +43,7 @@ class TcpServerHandler : public QObject {
   void serverReceivedHandler(qintptr desc,
                              QTcpSocket* socketRef,
                              const QByteArray& data);
- public slots:
+ private slots:
   void clientConnected(qintptr desc, QTcpSocket* socket);
 
   void clientDisconnected(qintptr desc);

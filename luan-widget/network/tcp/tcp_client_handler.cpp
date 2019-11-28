@@ -40,16 +40,17 @@ void TcpClient::close() {
  */
 void TcpClient::connectSuccess() {
   // 读取服务端数据
-  connect(sock, &QTcpSocket::readyRead, this, &TcpClient::readDataFromServer);
+  connect(sock, &QTcpSocket::readyRead, this, &TcpClient::readDataFromServer,
+          Qt::QueuedConnection);
   // 检测掉线
-  connect(sock, &QTcpSocket::disconnected, this,
-          &TcpClient::clientDisconnected);
+  connect(sock, &QTcpSocket::disconnected, this, &TcpClient::clientDisconnected,
+          Qt::QueuedConnection);
 
   sock->write(this->content.toUtf8());
 
   // 检测发送完毕
   connect(sock, &QTcpSocket::bytesWritten, this,
-          &TcpClient::clientFinishedSendingData);
+          &TcpClient::clientFinishedSendingData, Qt::QueuedConnection);
   this->sock->waitForBytesWritten();
 }
 
@@ -67,5 +68,6 @@ void TcpClient::clientDisconnected() {}
  * @brief clientFinishedSendingData 数据发送完毕
  */
 void TcpClient::clientFinishedSendingData() {
+  // qDebug() << "socket will close";
   this->close();
 }

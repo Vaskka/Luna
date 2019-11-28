@@ -15,7 +15,7 @@ TcpServerHandler::TcpServerHandler(quint16 port) {
 
   // 同一tcp消息处理回调
   connect(this, &TcpServerHandler::serverReceived, this,
-          &TcpServerHandler::serverReceivedHandler);
+          &TcpServerHandler::serverReceivedHandler, Qt::QueuedConnection);
 
   // listening
   if (!server->listen(QHostAddress::Any, port)) {
@@ -24,11 +24,11 @@ TcpServerHandler::TcpServerHandler(quint16 port) {
 
   // 连接回调
   connect(server, &TcpServer::ClientConnected, this,
-          &TcpServerHandler::clientConnected);
+          &TcpServerHandler::clientConnected, Qt::QueuedConnection);
 
   // 掉线回调
   connect(server, &TcpServer::ClientDisconnected, this,
-          &TcpServerHandler::clientDisconnected);
+          &TcpServerHandler::clientDisconnected, Qt::QueuedConnection);
 }
 
 /**
